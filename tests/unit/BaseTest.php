@@ -1,4 +1,5 @@
 <?php
+
 namespace PsalmWordPress\Tests;
 
 use Psalm;
@@ -9,43 +10,49 @@ use Psalm\Internal\Provider\Providers;
 use Psalm\Internal\Provider\FileStorageProvider;
 use Psalm\Tests\Internal\Provider;
 
-class BaseTest extends Psalm\Tests\TestCase {
-	public function setUp() : void {
-		parent::setUp();
-		$this->project_analyzer->getConfig()->initializePlugins( $this->project_analyzer );
-		$this->project_analyzer->getConfig()->visitStubFiles( $this->project_analyzer->getCodebase() );
-	}
+class BaseTest extends Psalm\Tests\TestCase
+{
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->project_analyzer->getConfig()->initializePlugins($this->project_analyzer);
+        $this->project_analyzer->getConfig()->visitStubFiles($this->project_analyzer->getCodebase());
+    }
 
-	/**
-	 * @return Config
-	 */
-	protected function makeConfig() : Config {
-		$config = new TestConfig();
-		$config->addPluginClass( 'PsalmWordPress\\Plugin' );
-		return $config;
-	}
+    /**
+     * @return Config
+     */
+    protected function makeConfig(): Config
+    {
+        $config = new TestConfig();
+        $config->addPluginClass('PsalmWordPress\\Plugin');
+        return $config;
+    }
 
-	public function analyzeFile($file_path, \Psalm\Context $context, bool $track_unused_suppressions = true, bool $taint_flow_tracking = false) : void {
-		$codebase = $this->project_analyzer->getCodebase();
-		$codebase->addFilesToAnalyze([$file_path => $file_path]);
+    public function analyzeFile($file_path, \Psalm\Context $context, bool $track_unused_suppressions = true, bool $taint_flow_tracking = false): void
+    {
+        $codebase = $this->project_analyzer->getCodebase();
+        $codebase->addFilesToAnalyze([$file_path => $file_path]);
 
-		$codebase->scanFiles();
-		$this->project_analyzer->trackUnusedSuppressions();
+        $codebase->scanFiles();
+        $this->project_analyzer->trackUnusedSuppressions();
 
-		$file_analyzer = new FileAnalyzer(
-			$this->project_analyzer,
-			$file_path,
-			$codebase->config->shortenFileName($file_path)
-		);
-		$file_analyzer->analyze($context);
-	}
+        $file_analyzer = new FileAnalyzer(
+            $this->project_analyzer,
+            $file_path,
+            $codebase->config->shortenFileName($file_path)
+        );
+        $file_analyzer->analyze($context);
+    }
 }
 
-class TestConfig extends Psalm\Tests\TestConfig {
-	protected function getContents() : string {
-		return '<?xml version="1.0"?>
+class TestConfig extends Psalm\Tests\TestConfig
+{
+    protected function getContents(): string
+    {
+        return '<?xml version="1.0"?>
 			<projectFiles>
 				<directory name="./" />
 			</projectFiles>';
-	}
+    }
 }

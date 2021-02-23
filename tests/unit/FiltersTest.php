@@ -1,19 +1,22 @@
 <?php
+
 namespace PsalmWordPress\Tests;
 
 use Psalm;
 
-class FiltersTest extends BaseTest {
-	use Psalm\Tests\Traits\InvalidCodeAnalysisTestTrait;
-	use Psalm\Tests\Traits\ValidCodeAnalysisTestTrait;
+class FiltersTest extends BaseTest
+{
+    use Psalm\Tests\Traits\InvalidCodeAnalysisTestTrait;
+    use Psalm\Tests\Traits\ValidCodeAnalysisTestTrait;
 
-	 /**
-	 * @return iterable<string,array{string,assertions?:array<string,string>,error_levels?:string[]}>
-	 */
-	public function providerValidCodeParse() : iterable {
-		return [
-			'add_filter with docblock' => [
-				<<<'EOD'
+     /**
+     * @return iterable<string,array{string,assertions?:array<string,string>,error_levels?:string[]}>
+     */
+    public function providerValidCodeParse(): iterable
+    {
+        return [
+            'add_filter with docblock' => [
+                <<<'EOD'
 				<?php
 				/**
 				 * @param array $missing_sizes Array with the missing image sub-sizes.
@@ -26,9 +29,9 @@ class FiltersTest extends BaseTest {
 					return $sizes;
 				}, 10, 3 );
 				EOD,
-			],
-			'add_filter with no docblock' => [
-				<<<'EOD'
+            ],
+            'add_filter with no docblock' => [
+                <<<'EOD'
 				<?php
 				$result = apply_filters( 'test_filter', true, 1, 1.1 );
 
@@ -36,9 +39,9 @@ class FiltersTest extends BaseTest {
 					return false;
 				}, 10, 3 );
 				EOD,
-			],
-			'add_filter with double apply_filters call' => [
-				<<<'EOD'
+            ],
+            'add_filter with double apply_filters call' => [
+                <<<'EOD'
 				<?php
 				/**
 				 * @param int $missing_sizes
@@ -54,17 +57,18 @@ class FiltersTest extends BaseTest {
 					return 1;
 				}, 10, 3 );
 				EOD,
-			]
-		];
-	}
+            ]
+        ];
+    }
 
-	/**
-	 * @return iterable<string,array{string,error_message:string,2?:string[],3?:bool,4?:string}>
-	 */
-	public function providerInvalidCodeParse() : iterable {
-		return [
-			'add_filter fails wrong types' => [
-				<<<'EOD'
+    /**
+     * @return iterable<string,array{string,error_message:string,2?:string[],3?:bool,4?:string}>
+     */
+    public function providerInvalidCodeParse(): iterable
+    {
+        return [
+            'add_filter fails wrong types' => [
+                <<<'EOD'
 				<?php
 				/**
 				 * @param array $missing_sizes Array with the missing image sub-sizes.
@@ -77,10 +81,10 @@ class FiltersTest extends BaseTest {
 					return $sizes;
 				}, 10, 3 );
 				EOD,
-				'error_message' => 'InvalidArgument',
-			],
-			'add_filter no type found' => [
-				<<<'EOD'
+                'error_message' => 'InvalidArgument',
+            ],
+            'add_filter no type found' => [
+                <<<'EOD'
 				<?php
 				$foo = 1;
 				$result = apply_filters( 'test_get_missing_image_subsizes', $foo );
@@ -89,8 +93,8 @@ class FiltersTest extends BaseTest {
 					return 1;
 				} );
 				EOD,
-				'error_message' => 'InvalidArdgument',
-			]
-		];
-	}
+                'error_message' => 'InvalidArdgument',
+            ]
+        ];
+    }
 }
